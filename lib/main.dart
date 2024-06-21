@@ -41,20 +41,22 @@ class MyHomePage extends StatelessWidget {
     var pair = appState.current;
 
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('A random AWSOME idea:'),
-          BigCard(pair: pair),
-//aggiungo il pulsante per passare alla parola successiva e
-// creo il mio repository
-          ElevatedButton(
-            onPressed: () {
-              appState.getNext();
-            },
-            child: Text('Next'),
-          ),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('A random AWSOME idea:'),
+            BigCard(pair: pair),
+            //aggiungo il pulsante per passare alla parola successiva e
+            // creo il mio repository
+            ElevatedButton(
+              onPressed: () {
+                appState.getNext();
+              },
+              child: Text('Next'),
+            ),
+          ],
+        ),
       ),
     );
   }
