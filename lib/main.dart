@@ -17,8 +17,7 @@ class MyApp extends StatelessWidget {
         title: 'Namer App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-              seedColor: Color.fromARGB(255, 255, 108, 34)),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.orangeAccent),
         ),
         home: MyHomePage(),
       ),
@@ -70,6 +69,35 @@ class BigCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(pair.asLowerCase);
+    final theme = Theme.of(context);
+    return Card(
+      color: theme.colorScheme.primary,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Text(
+            //pair.asLowerCase, style: theme.textTheme.displayMedium
+            pair.asLowerCase,
+            style: TextStyle(fontSize: 20, color: Colors.white)),
+      ),
+    );
   }
+//VERSIONE CON LETTORE VOICEOVER CHE NON POSSO TESTARE PERCHÈ
+//IL MIO DISPOSITIVO È TROPPO LENTO
+  /* Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Card(
+      color: theme.colorScheme.primary,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Semantics(
+          label: "${pair.first} ${pair.second}",
+          child: Text(
+            pair.asLowerCase,
+            style: TextStyle(fontSize: 20, color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  } */
 }
