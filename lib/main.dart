@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
         title: 'Namer App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.orangeAccent),
+          colorScheme:
+              ColorScheme.fromSeed(seedColor: Color.fromRGBO(249, 21, 0, 0.8)),
         ),
         home: MyHomePage(),
       ),
@@ -32,6 +33,25 @@ class MyAppState extends ChangeNotifier {
     current = WordPair.random();
     notifyListeners();
   }
+
+  /* 
+ * Qui aggiungo un array dove registro tutti i like
+ * delle parole che sono state contrassegnare come preferita.
+ * L'elenco può contenere solo coppie di parole.
+ * Il generics, inoltre, così impostato garantisce pure che 
+ * non ci siano tipi nulli inseriti per caso.
+ */
+  var favorites = <WordPair>[];
+
+  //funzione per aggiungere o rimuovere una parola dai preferiti
+  void toggleFavorite() {
+    if (favorites.contains(current)) {
+      favorites.remove(current);
+    } else {
+      favorites.add(current);
+    }
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatelessWidget {
@@ -40,21 +60,61 @@ class MyHomePage extends StatelessWidget {
     var appState = context.watch<MyAppState>();
     var pair = appState.current;
 
+    IconData icon;
+    if (appState.favorites.contains(pair)) {
+      icon = Icons.favorite;
+    } else {
+      icon = Icons.favorite_border;
+    }
+
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('A random AWSOME idea:'),
             BigCard(pair: pair),
-            //aggiungo il pulsante per passare alla parola successiva e
-            // creo il mio repository
-            ElevatedButton(
-              onPressed: () {
-                appState.getNext();
-              },
-              child: Text('Next'),
+            //aggiungo un separatore per dare più spazio ai pulsanti
+            SizedBox(height: 10),
+            //aggiungo il pulsante per passare alla parola successiva
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                //pulsante per aggiungere like alla parola corrente
+                ElevatedButton.icon(
+                  onPressed: () {
+                    appState.toggleFavorite();
+                  },
+                  icon: Icon(icon),
+                  label: Text('Like'),
+                ),
+
+                //do spazio tra i pulsanti
+                SizedBox(width: 10),
+
+                ElevatedButton(
+                  onPressed: () {
+                    appState.getNext();
+                  },
+                  child: Text('Next'),
+                ),
+              ],
             ),
+            //aggiungo un separatore per dare più spazio ai pulsanti
+            SizedBox(height: 10),
+
+            //versione suggerita da Codeium
+            //aggiungo il pulsante per aggiungere o rimuovere una parola dai preferiti
+            /*  Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    appState.toggleFavorite();
+                  },
+                  child: Text('Like'),
+                ),
+              ],
+            ), */
           ],
         ),
       ),
@@ -84,8 +144,9 @@ class BigCard extends StatelessWidget {
       ),
     );
   }
+
 //VERSIONE CON LETTORE VOICEOVER CHE NON POSSO TESTARE PERCHÈ
-//IL MIO DISPOSITIVO È TROPPO LENTO
+//CREDO CHE IL MIO DISPOSITIVO SIA TROPPO LENTO
   /* Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
