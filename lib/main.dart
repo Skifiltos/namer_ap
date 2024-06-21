@@ -38,7 +38,7 @@ class MyAppState extends ChangeNotifier {
  * Qui aggiungo un array dove registro tutti i like
  * delle parole che sono state contrassegnare come preferita.
  * L'elenco può contenere solo coppie di parole.
- * Il generics, inoltre, così impostato garantisce pure che 
+ * Il generics, inoltre, così impostato, garantisce pure che 
  * non ci siano tipi nulli inseriti per caso.
  */
   var favorites = <WordPair>[];
@@ -55,9 +55,31 @@ class MyAppState extends ChangeNotifier {
 }
 
 //refactoring MyHomePage
-class MyHomePage extends StatelessWidget {
+//trasferisco menù su barra laterale
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+// ...
+
+class _MyHomePageState extends State<MyHomePage> {
+  var selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
+    Widget page;
+    switch (selectedIndex) {
+      case 0:
+        page = GeneratorPage();
+        break;
+      case 1:
+        page = Placeholder();
+        break;
+      default:
+        throw UnimplementedError('no widget for $selectedIndex');
+    }
+
     return Scaffold(
       body: Row(
         children: [
@@ -74,16 +96,18 @@ class MyHomePage extends StatelessWidget {
                   label: Text('Favorites'),
                 ),
               ],
-              selectedIndex: 0,
+              selectedIndex: selectedIndex,
               onDestinationSelected: (value) {
-                print('selected: $value');
+                setState(() {
+                  selectedIndex = value;
+                });
               },
             ),
           ),
           Expanded(
             child: Container(
               color: Theme.of(context).colorScheme.primaryContainer,
-              child: GeneratorPage(),
+              child: page, // ← Here.
             ),
           ),
         ],
@@ -91,6 +115,8 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
+
+// ...
 
 class GeneratorPage extends StatelessWidget {
   @override
